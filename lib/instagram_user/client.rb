@@ -51,24 +51,24 @@ module InstagramUser
 
     def login_http_headers
       {
-        "user-agent":  @user_agent,
-        "referer":     @referer,
-        "x-csrftoken": "null",
-        "cookie":      "sessionid=null; csrftoken=null"
+        "user-agent"  => @user_agent,
+        "referer"     => @referer,
+        "x-csrftoken" => "null",
+        "cookie"      => "sessionid=null; csrftoken=null"
       }
     end
 
     def username_http_headers
       {
-          "user-agent":  @user_agent,
-          "referer":     @referer
+          "user-agent" => @user_agent,
+          "referer"    => @referer
       }
     end
 
     def get_user_info
       {
-        "username": @user_name,
-        "password": @password
+        username: @user_name,
+        password: @password
       }
     end
 
