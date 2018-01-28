@@ -1,10 +1,9 @@
 # InstagramUser
 
 [![Gem Version](https://img.shields.io/gem/v/instagram_user.svg?style=flat)](http://badge.fury.io/rb/instagram_user)
-[![Build Status](https://img.shields.io/travis/yuzuru-s/instagram_user.svg?style=flat)](https://travis-ci.org/yuzuru-s/instagram_user)
-[![Coverage Status](https://img.shields.io/coveralls/yuzuru-s/instagram_user.svg?style=flat)](https://coveralls.io/r/yuzuru-s/instagram_user?branch=master)
-[![Code Climate](https://img.shields.io/codeclimate/github/yuzuru-s/instagram_user.svg?style=flat)](https://codeclimate.com/github/yuzuru-s/instagram_user)
-[![Dependency Status](https://img.shields.io/gemnasium/yuzuru-s/instagram_user.svg?style=flat)](https://gemnasium.com/yuzuru-s/instagram_user)
+[![Build Status](https://img.shields.io/travis/YuzuruS/instagram_user.svg?style=flat)](https://travis-ci.org/YuzuruS/instagram_user)
+[![Coverage Status](https://img.shields.io/coveralls/YuzuruS/instagram_user.svg?style=flat)](https://coveralls.io/r/YuzuruS/instagram_user?branch=master)
+[![Code Climate](https://img.shields.io/codeclimate/github/YuzuruS/instagram_user.svg?style=flat)](https://codeclimate.com/github/YuzuruS/instagram_user)
 
 ## Installation
 
