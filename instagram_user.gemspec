@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Yuzuru Suzuki"]
   spec.email         = ["navitima@gmail.com"]
 
-  spec.summary       = %q{hoge}
-  spec.description   = %q{hoge}
+  spec.summary       = %q{Getting following and follower user list on Instagram}
+  spec.description   = %q{You can get following and follower user list on Instagram without Instagram API.}
   spec.homepage      = "https://github.com/YuzuruS/instagram_user"
   spec.license       = "MIT"
 
@@ -36,4 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "guard-rspec"
   spec.add_development_dependency "pry-byebug"
   spec.add_development_dependency "guard"
+  spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'coveralls'
+  spec.add_development_dependency 'simplecov'
 end

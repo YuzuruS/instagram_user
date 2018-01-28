@@ -1,8 +1,10 @@
 # InstagramUser
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/instagram_user`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+[![Gem Version](https://img.shields.io/gem/v/instagram_user.svg?style=flat)](http://badge.fury.io/rb/instagram_user)
+[![Build Status](https://img.shields.io/travis/yuzuru-s/instagram_user.svg?style=flat)](https://travis-ci.org/yuzuru-s/instagram_user)
+[![Coverage Status](https://img.shields.io/coveralls/yuzuru-s/instagram_user.svg?style=flat)](https://coveralls.io/r/yuzuru-s/instagram_user?branch=master)
+[![Code Climate](https://img.shields.io/codeclimate/github/yuzuru-s/instagram_user.svg?style=flat)](https://codeclimate.com/github/yuzuru-s/instagram_user)
+[![Dependency Status](https://img.shields.io/gemnasium/yuzuru-s/instagram_user.svg?style=flat)](https://gemnasium.com/yuzuru-s/instagram_user)
 
 ## Installation
 
@@ -22,17 +24,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+cli = InstagramUser.new(user_name: 'yuzuru_dev', password: 'PASSWORD')
+follows = cli.get_follows(7007201232)
+# => ["yudsuzuk", "instagram"]
 
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+followers = cli.get_followers(7007201232)
+# => ["yudsuzuk"]
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/YuzuruS/instagram_user. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
 
 ## License
 
