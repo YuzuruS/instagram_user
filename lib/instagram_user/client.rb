@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 require 'mechanize'
 require 'json'
 require 'instagram_user/version'
@@ -10,7 +8,7 @@ module InstagramUser
     BASE_URL              = 'https://www.instagram.com/graphql/query/?query_hash=%s&variables=%s'.freeze
     LOGIN_URL             = 'https://www.instagram.com/accounts/login/ajax/'.freeze
     DEFAULT_USER_AGENT    = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'.freeze
-    DEFAULT_MAX_NUM_USERS = 3000.freeze
+    DEFAULT_MAX_NUM_USERS = 3000
     DEFAULT_REFERER       = 'https://www.instagram.com/'.freeze
 
     USER_MAP = {
@@ -46,7 +44,7 @@ module InstagramUser
 
     def logined_session
       @session.request_headers = login_http_headers
-      @session.post(LOGIN_URL, get_user_info)
+      @session.post(LOGIN_URL, user_info)
     end
 
     def login_http_headers
@@ -65,7 +63,7 @@ module InstagramUser
       }
     end
 
-    def get_user_info
+    def user_info
       {
         username: @user_name,
         password: @password
@@ -88,10 +86,10 @@ module InstagramUser
     def fetch_user_names(user_id, request_params, after = nil)
       variables = {
         id:    user_id,
-        first: @num_users,
+        first: @num_users
       }
       variables[:after] = after unless after.nil?
-      url = sprintf(BASE_URL, request_params[:query_hash], JSON.generate(variables))
+      url = format(BASE_URL, request_params[:query_hash], JSON.generate(variables))
       @session.request_headers = username_http_headers
       page = @session.get(url)
       json = JSON.parse(page.body)
@@ -99,7 +97,7 @@ module InstagramUser
       {
         after:      edge["page_info"]["end_cursor"],
         has_next:   edge["page_info"]["has_next_page"],
-        user_names: edge["edges"].map{|f| f["node"]["username"]}
+        user_names: edge["edges"].map{ |f| f["node"]["username"] }
       }
     end
   end
