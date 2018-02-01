@@ -28,7 +28,7 @@ Or install it yourself as:
 ## Usage
 
 ```ruby
-cli = InstagramUser.new(user_name: 'yuzuru_dev', password: 'PASSWORD')
+cli = InstagramUser.new(user_name: 'YOUR_USER_NAME', password: 'YOUR_PASSWORD')
 
 follows = cli.get_follows('yuzuru_dev')
 # => ["yudsuzuk", "instagram"]
