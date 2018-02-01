@@ -7,6 +7,7 @@ module InstagramUser
 
     BASE_URL              = 'https://www.instagram.com/graphql/query/?query_hash=%s&variables=%s'.freeze
     LOGIN_URL             = 'https://www.instagram.com/accounts/login/ajax/'.freeze
+    USER_INFO_URL         = 'https://www.instagram.com/%s/?__a=1'.freeze
     DEFAULT_USER_AGENT    = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'.freeze
     DEFAULT_MAX_NUM_USERS = 3000
     DEFAULT_REFERER       = 'https://www.instagram.com/'.freeze
@@ -29,18 +30,29 @@ module InstagramUser
       @referer       = (ENV['INSTAGRAM_REFERER']    || options[:referer]    || DEFAULT_REFERER)
       @num_users     = (ENV['INSTAGRAM_NUM_USERS']  || options[:num_users]  || DEFAULT_MAX_NUM_USERS)
       @session       = Mechanize.new
+      @user_ids      = {}
       logined_session
     end
 
-    def get_follows(user_id)
+    def get_follows(user_name)
+      user_id = @user_ids[user_name].nil? ? get_user_id(user_name) : @user_ids[user_name]
       fetch_all_user_names(user_id, USER_MAP[:follow])
     end
 
-    def get_followers(user_id)
+    def get_followers(user_name)
+      user_id = @user_ids[user_name].nil? ? get_user_id(user_name) : @user_ids[user_name]
       fetch_all_user_names(user_id, USER_MAP[:follower])
     end
 
     private
+
+    def get_user_id(user_name)
+      url = USER_INFO_URL % [user_name]
+      page = @session.get(url)
+      json = JSON.parse(page.body)
+      @user_ids[user_name] = json["user"]["id"]
+      @user_ids[user_name]
+    end
 
     def logined_session
       @session.request_headers = login_http_headers
@@ -89,7 +101,7 @@ module InstagramUser
         first: @num_users
       }
       variables[:after] = after unless after.nil?
-      url = format(BASE_URL, request_params[:query_hash], JSON.generate(variables))
+      url = BASE_URL % [request_params[:query_hash], JSON.generate(variables)]
       @session.request_headers = username_http_headers
       page = @session.get(url)
       json = JSON.parse(page.body)

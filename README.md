@@ -27,33 +27,13 @@ Or install it yourself as:
 
 ## Usage
 
-1. Prepare your user_name and password for Instagram.
-2. Prepare instagram user id to check list.
-
-### How to find instagram user id
-
-There are some methods finding instagram user id
-
-- Use this site https://smashballoon.com/instagram-feed/find-instagram-user-id/ 
-- execute Javascript on Profile page to check on Chrome dev console
-
-```apple js
-window._sharedData.entry_data.ProfilePage[0].user.id
-```
-
-![2018-01-30 23 12 23](https://user-images.githubusercontent.com/1485195/35570636-1f79042e-0613-11e8-92f5-a19412bf38c4.png)
-
-#### code
-
 ```ruby
 cli = InstagramUser.new(user_name: 'yuzuru_dev', password: 'PASSWORD')
 
-# input instagram's user id
-follows = cli.get_follows(7007201232)
+follows = cli.get_follows('yuzuru_dev')
 # => ["yudsuzuk", "instagram"]
 
-# input instagram's user id
-followers = cli.get_followers(7007201232)
+followers = cli.get_followers('yuzuru_dev')
 # => ["yudsuzuk"]
 ```
 
