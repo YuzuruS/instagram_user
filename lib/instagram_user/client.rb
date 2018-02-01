@@ -47,7 +47,7 @@ module InstagramUser
     private
 
     def get_user_id(user_name)
-      url = USER_INFO_URL % [user_name]
+      url = format USER_INFO_URL, user_name
       page = @session.get(url)
       json = JSON.parse(page.body)
       @user_ids[user_name] = json["user"]["id"]
@@ -60,15 +60,13 @@ module InstagramUser
     end
 
     def login_http_headers
-      {
-        "user-agent"  => @user_agent,
-        "referer"     => @referer,
+      default_http_headers.update({
         "x-csrftoken" => "null",
         "cookie"      => "sessionid=null; csrftoken=null"
-      }
+      })
     end
 
-    def username_http_headers
+    def default_http_headers
       {
           "user-agent" => @user_agent,
           "referer"    => @referer
@@ -101,8 +99,8 @@ module InstagramUser
         first: @num_users
       }
       variables[:after] = after unless after.nil?
-      url = BASE_URL % [request_params[:query_hash], JSON.generate(variables)]
-      @session.request_headers = username_http_headers
+      url = format BASE_URL, request_params[:query_hash], JSON.generate(variables)
+      @session.request_headers = default_http_headers
       page = @session.get(url)
       json = JSON.parse(page.body)
       edge = json["data"]["user"][request_params[:edge]]
