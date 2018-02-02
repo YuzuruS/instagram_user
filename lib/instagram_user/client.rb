@@ -60,10 +60,10 @@ module InstagramUser
     end
 
     def login_http_headers
-      default_http_headers.update({
+      default_http_headers.update(
         "x-csrftoken" => "null",
         "cookie"      => "sessionid=null; csrftoken=null"
-      })
+      )
     end
 
     def default_http_headers
