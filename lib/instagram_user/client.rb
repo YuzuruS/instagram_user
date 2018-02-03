@@ -1,6 +1,8 @@
 require 'mechanize'
+require 'selenium-webdriver'
 require 'json'
 require 'instagram_user/version'
+require 'pry-byebug'
 
 module InstagramUser
   class Client
@@ -32,6 +34,7 @@ module InstagramUser
       @session       = Mechanize.new
       @user_ids      = {}
       logined_session
+      selenium_setting
     end
 
     def get_follows(user_name)
@@ -44,7 +47,69 @@ module InstagramUser
       fetch_all_user_names(user_id, USER_MAP[:follower])
     end
 
+    def create_follow(user_name)
+      @driver.get "https://www.instagram.com/#{user_name}"
+      begin
+        @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
+      rescue => e
+        return false
+      end
+
+      color = @driver.find_element(:xpath, '//article//button').css_value("color")
+      return false if color != "rgba(255, 255, 255, 1)"
+
+      @driver.find_element(:xpath, '//article//button').click
+      sleep(2)
+
+      @driver.get "https://www.instagram.com/#{name.user_name}"
+      @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
+      color = @driver.find_element(:xpath, '//article//button').css_value("color")
+      (color == "rgba(255, 255, 255, 1)") ? false : true
+    end
+
+    def delete_follow(user_name)
+      @driver.get "https://www.instagram.com/#{user_name}"
+      begin
+        @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
+      rescue => e
+        return false
+      end
+
+      color = @driver.find_element(:xpath, '//article//button').css_value("color")
+      return false if color == "rgba(255, 255, 255, 1)"
+
+      @driver.find_element(:xpath, '//article//button').click
+      sleep(2)
+
+      @driver.get "https://www.instagram.com/#{name.user_name}"
+      @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
+      color = @driver.find_element(:xpath, '//article//button').css_value("color")
+      (color != "rgba(255, 255, 255, 1)") ? false : true
+    end
+
     private
+
+    def selenium_setting
+      options = Selenium::WebDriver::Chrome::Options.new
+      options.add_argument("--user-agent=#{@user_agent}")
+      #options.add_argument('--headless')
+      @driver = Selenium::WebDriver.for :chrome, options: options
+      @session.cookie_jar.cookies.each do |c|
+        cookie_hash = {
+          name:    c.name,
+          value:   c.value,
+          path:    c.path,
+          secure:  c.secure,
+          expires: c.expires,
+          domain:  c.domain,
+          for_domain: c.for_domain,
+          httponly: c.httponly,
+          max_age: c.max_age
+        }
+        @driver.manage.add_cookie(cookie_hash)
+      end
+      @wait   = Selenium::WebDriver::Wait.new(timeout: 60)
+    end
 
     def get_user_id(user_name)
       url = format USER_INFO_URL, user_name
