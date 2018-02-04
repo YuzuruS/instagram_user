@@ -91,7 +91,7 @@ module InstagramUser
     def selenium_setting
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_argument("--user-agent=#{@user_agent}")
-      #options.add_argument('--headless')
+      options.add_argument('--headless')
       @driver = Selenium::WebDriver.for :chrome, options: options
       @session.cookie_jar.cookies.each do |c|
         cookie_hash = {
