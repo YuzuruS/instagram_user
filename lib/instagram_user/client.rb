@@ -2,7 +2,6 @@ require 'mechanize'
 require 'selenium-webdriver'
 require 'json'
 require 'instagram_user/version'
-require 'pry-byebug'
 
 module InstagramUser
   class Client
@@ -96,15 +95,15 @@ module InstagramUser
       @driver = Selenium::WebDriver.for :chrome, options: options
       @session.cookie_jar.cookies.each do |c|
         cookie_hash = {
-          name:    c.name,
-          value:   c.value,
-          path:    c.path,
-          secure:  c.secure,
-          expires: c.expires,
-          domain:  c.domain,
+          name:       c.name,
+          value:      c.value,
+          path:       c.path,
+          secure:     c.secure,
+          expires:    c.expires,
+          domain:     c.domain,
           for_domain: c.for_domain,
-          httponly: c.httponly,
-          max_age: c.max_age
+          httponly:   c.httponly,
+          max_age:    c.max_age
         }
         @driver.manage.add_cookie(cookie_hash)
       end

@@ -5,13 +5,11 @@
 [![Coverage Status](https://img.shields.io/coveralls/YuzuruS/instagram_user.svg?style=flat)](https://coveralls.io/r/YuzuruS/instagram_user?branch=master)
 [![Code Climate](https://img.shields.io/codeclimate/github/YuzuruS/instagram_user.svg?style=flat)](https://codeclimate.com/github/YuzuruS/instagram_user)
 
-Client for the Instagram Web Service for getting list of followers and follows without Instagram API.  
-It uses scraping and private api for instagram.  
-It may be unusable in the future because of using private api in the future.
+Client for the Instagram Web Service without Instagram API.  
+Implemented in Ruby using the Selenium and Mechanize module.
 
 ## Installation
 
-Add this line to your application's Gemfile:
 
 ```ruby
 gem 'instagram_user'
@@ -30,11 +28,21 @@ Or install it yourself as:
 ```ruby
 cli = InstagramUser.new(user_name: 'YOUR_USER_NAME', password: 'YOUR_PASSWORD')
 
+# Get the follow list for the specified user
 follows = cli.get_follows('yuzuru_dev')
 # => ["yudsuzuk", "instagram"]
 
+# Get the follower list for the specified user
 followers = cli.get_followers('yuzuru_dev')
 # => ["yudsuzuk"]
+
+# Follow the specified user
+res = cli.create_follow('yuzuru_dev')
+# => true or false
+
+# Unfollow the specified user
+res = cli.delete_follow('yuzuru_dev')
+# => true or false
 ```
 
 ## Contributing

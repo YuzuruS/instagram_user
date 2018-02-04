@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Yuzuru Suzuki"]
   spec.email         = ["navitima@gmail.com"]
 
-  spec.summary       = %q{Getting following and follower user list on Instagram}
-  spec.description   = %q{You can get following and follower user list on Instagram without Instagram API.}
+  spec.summary       = "Client for the Instagram using scraping"
+  spec.description   = "Client for the Instagram Web Service without Instagram API. Implemented in Ruby using the Selenium and Mechanize module."
   spec.homepage      = "https://github.com/YuzuruS/instagram_user"
   spec.license       = "MIT"
 
