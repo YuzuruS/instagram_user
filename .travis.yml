@@ -1,7 +1,6 @@
 sudo: required
 dist: trusty
 language: ruby
-script: bundle exec rake ci
 rvm:
   - 2.1.0
   - 2.2.0
