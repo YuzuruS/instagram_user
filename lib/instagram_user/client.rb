@@ -34,7 +34,7 @@ module InstagramUser
       @session       = Mechanize.new
       @user_ids      = {}
       logined_session
-      selenium_setting
+      selenium_setting unless options[:selenium] == false
     end
 
     def get_follows(user_name)
@@ -48,54 +48,40 @@ module InstagramUser
     end
 
     def create_follow(user_name)
-      @driver.get "https://www.instagram.com/#{user_name}"
-      begin
-        @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
-      rescue => e
-        return false
-      end
+      color = get_follow_btn_color(user_name)
 
-      color = @driver.find_element(:xpath, '//article//button').css_value("color")
-      return false if color != "rgba(255, 255, 255, 1)"
+      return false if color == false || color != "rgba(255, 255, 255, 1)"
 
       @driver.find_element(:xpath, '//article//button').click
       sleep(2)
 
-      @driver.get "https://www.instagram.com/#{user_name}"
-      @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
-      color = @driver.find_element(:xpath, '//article//button').css_value("color")
-      (color == "rgba(255, 255, 255, 1)") ? false : true
+      color = get_follow_btn_color(user_name)
+      (color == false || color == "rgba(255, 255, 255, 1)") ? false : true
     end
 
     def delete_follow(user_name)
+      color = get_follow_btn_color(user_name)
+
+      return false if color == false || color == "rgba(255, 255, 255, 1)"
+
+      @driver.find_element(:xpath, '//article//button').click
+      sleep(2)
+
+      color = get_follow_btn_color(user_name)
+      (color == false || color != "rgba(255, 255, 255, 1)") ? false : true
+    end
+
+    private
+
+    def get_follow_btn_color(user_name)
       @driver.get "https://www.instagram.com/#{user_name}"
       begin
         @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
       rescue => e
         return false
       end
-
-      color = @driver.find_element(:xpath, '//article//button').css_value("color")
-      return false if color == "rgba(255, 255, 255, 1)"
-
-      @driver.find_element(:xpath, '//article//button').click
-      sleep(2)
-
-      @driver.get "https://www.instagram.com/#{user_name}"
-      @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
-      color = @driver.find_element(:xpath, '//article//button').css_value("color")
-      (color != "rgba(255, 255, 255, 1)") ? false : true
+      @driver.find_element(:xpath, '//article//button').css_value("color")
     end
-
-    def get_cookies_d
-      @driver.manage.all_cookies
-    end
-
-    def get_cookies_s
-      @session.cookie_jar.cookies
-    end
-
-    private
 
     def selenium_setting
       options = Selenium::WebDriver::Chrome::Options.new

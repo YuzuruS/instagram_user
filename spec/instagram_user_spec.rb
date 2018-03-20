@@ -7,7 +7,8 @@ RSpec.describe InstagramUser do
     @password = 'gkK9.izwZGBysV82uowpE+JqYzztgVA9'
     @cli = InstagramUser.new(
       user_name: @user_name,
-      password: @password
+      password: @password,
+      selenium: false
     )
   end
 
