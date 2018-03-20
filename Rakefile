@@ -9,5 +9,4 @@ end
 
 Coveralls::RakeTask.new
 
-task :default => ["rspec"]
-task :ci => ["rspec", "coveralls:push"]
+task :default => ["rspec", "coveralls:push"]

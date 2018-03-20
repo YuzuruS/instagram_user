@@ -1,7 +1,6 @@
 # InstagramUser
 
 [![Gem Version](https://img.shields.io/gem/v/instagram_user.svg?style=flat)](http://badge.fury.io/rb/instagram_user)
-[![Build Status](https://img.shields.io/travis/YuzuruS/instagram_user.svg?style=flat)](https://travis-ci.org/YuzuruS/instagram_user)
 [![Coverage Status](https://img.shields.io/coveralls/YuzuruS/instagram_user.svg?style=flat)](https://coveralls.io/r/YuzuruS/instagram_user?branch=master)
 [![Code Climate](https://img.shields.io/codeclimate/github/YuzuruS/instagram_user.svg?style=flat)](https://codeclimate.com/github/YuzuruS/instagram_user)
 
