@@ -2,6 +2,7 @@ require 'mechanize'
 require 'selenium-webdriver'
 require 'json'
 require 'instagram_user/version'
+require 'pry'
 
 module InstagramUser
   class Client
@@ -60,7 +61,7 @@ module InstagramUser
       @driver.find_element(:xpath, '//article//button').click
       sleep(2)
 
-      @driver.get "https://www.instagram.com/#{name.user_name}"
+      @driver.get "https://www.instagram.com/#{user_name}"
       @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
       color = @driver.find_element(:xpath, '//article//button').css_value("color")
       (color == "rgba(255, 255, 255, 1)") ? false : true
@@ -80,10 +81,18 @@ module InstagramUser
       @driver.find_element(:xpath, '//article//button').click
       sleep(2)
 
-      @driver.get "https://www.instagram.com/#{name.user_name}"
+      @driver.get "https://www.instagram.com/#{user_name}"
       @wait.until { !@driver.find_elements(:xpath, '//article//button').empty? }
       color = @driver.find_element(:xpath, '//article//button').css_value("color")
       (color != "rgba(255, 255, 255, 1)") ? false : true
+    end
+
+    def get_cookies_d
+      @driver.manage.all_cookies
+    end
+
+    def get_cookies_s
+      @session.cookie_jar.cookies
     end
 
     private
@@ -93,6 +102,7 @@ module InstagramUser
       options.add_argument("--user-agent=#{@user_agent}")
       options.add_argument('--headless')
       @driver = Selenium::WebDriver.for :chrome, options: options
+      @driver.get 'https://www.instagram.com/'
       @session.cookie_jar.cookies.each do |c|
         cookie_hash = {
           name:       c.name,
@@ -103,7 +113,10 @@ module InstagramUser
           domain:     c.domain,
           for_domain: c.for_domain,
           httponly:   c.httponly,
-          max_age:    c.max_age
+          max_age:    c.max_age,
+          created_at: c.created_at,
+          accessed_at: c.accessed_at,
+          origin: c.origin.to_s
         }
         @driver.manage.add_cookie(cookie_hash)
       end
@@ -114,7 +127,7 @@ module InstagramUser
       url = format USER_INFO_URL, user_name
       page = @session.get(url)
       json = JSON.parse(page.body)
-      @user_ids[user_name] = json["user"]["id"]
+      @user_ids[user_name] = json["graphql"]["user"]["id"]
       @user_ids[user_name]
     end
 
