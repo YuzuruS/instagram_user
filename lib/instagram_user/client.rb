@@ -2,7 +2,6 @@ require 'mechanize'
 require 'selenium-webdriver'
 require 'json'
 require 'instagram_user/version'
-require 'pry'
 
 module InstagramUser
   class Client
@@ -10,8 +9,8 @@ module InstagramUser
     BASE_URL              = 'https://www.instagram.com/graphql/query/?query_hash=%s&variables=%s'.freeze
     LOGIN_URL             = 'https://www.instagram.com/accounts/login/ajax/'.freeze
     USER_INFO_URL         = 'https://www.instagram.com/%s/?__a=1'.freeze
+    MEDIA_JSON_BY_TAG_URL = 'https://www.instagram.com/explore/tags/%s/?__a=1&max_id=%s'.freeze
     DEFAULT_USER_AGENT    = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36'.freeze
-    DEFAULT_MAX_NUM_USERS = 3000
     DEFAULT_REFERER       = 'https://www.instagram.com/'.freeze
 
     USER_MAP = {
@@ -30,21 +29,22 @@ module InstagramUser
       @password      = (ENV['INSTAGRAM_PASSWORD']   || options[:password])
       @user_agent    = (ENV['INSTAGRAM_USER_AGENT'] || options[:user_agent] || DEFAULT_USER_AGENT)
       @referer       = (ENV['INSTAGRAM_REFERER']    || options[:referer]    || DEFAULT_REFERER)
-      @num_users     = (ENV['INSTAGRAM_NUM_USERS']  || options[:num_users]  || DEFAULT_MAX_NUM_USERS)
       @session       = Mechanize.new
       @user_ids      = {}
-      logined_session
-      selenium_setting unless options[:selenium] == false
+
+      return if @user_name.nil? || @password.nil?
+      mechanize_login_setting
+      selenium_login_setting unless options[:selenium] == false
     end
 
-    def get_follows(user_name)
+    def get_follows(user_name, num_users = 3000)
       user_id = @user_ids[user_name].nil? ? get_user_id(user_name) : @user_ids[user_name]
-      fetch_all_user_names(user_id, USER_MAP[:follow])
+      fetch_all_user_names(user_id, USER_MAP[:follow], num_users)
     end
 
-    def get_followers(user_name)
+    def get_followers(user_name, num_users = 3000)
       user_id = @user_ids[user_name].nil? ? get_user_id(user_name) : @user_ids[user_name]
-      fetch_all_user_names(user_id, USER_MAP[:follower])
+      fetch_all_user_names(user_id, USER_MAP[:follower], num_users)
     end
 
     def create_follow(user_name)
@@ -71,6 +71,23 @@ module InstagramUser
       (color == false || color != "rgba(255, 255, 255, 1)") ? false : true
     end
 
+    def get_medias_by_tag(tag_name, req_num = 1)
+      max_id = nil
+      tags   = {"recent" => [], "popularity" => []}
+
+      req_num.times do
+        url = format MEDIA_JSON_BY_TAG_URL, tag_name, max_id
+        page = @session.get(url)
+        json = JSON.parse(page.body)
+        hastags = json["graphql"]["hashtag"]
+        tags["recent"]    += hastags["edge_hashtag_to_media"]["edges"]
+        tags["popularity"] = hastags["edge_hashtag_to_top_posts"]["edges"] if max_id.nil?
+        break unless hastags["edge_hashtag_to_media"]["page_info"]["has_next_page"]
+        max_id = hastags["edge_hashtag_to_media"]["page_info"]["end_cursor"]
+      end
+      tags
+    end
+
     private
 
     def get_follow_btn_color(user_name)
@@ -83,7 +100,7 @@ module InstagramUser
       @driver.find_element(:xpath, '//article//button').css_value("color")
     end
 
-    def selenium_setting
+    def selenium_login_setting
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_argument("--user-agent=#{@user_agent}")
       options.add_argument('--headless')
@@ -117,7 +134,7 @@ module InstagramUser
       @user_ids[user_name]
     end
 
-    def logined_session
+    def mechanize_login_setting
       @session.request_headers = login_http_headers
       @session.post(LOGIN_URL, user_info)
     end
@@ -143,12 +160,12 @@ module InstagramUser
       }
     end
 
-    def fetch_all_user_names(user_id, request_params)
+    def fetch_all_user_names(user_id, request_params, num_users)
       after      = nil
       user_names = []
 
       loop do
-        res = fetch_user_names(user_id, request_params, after)
+        res = fetch_user_names(user_id, request_params, num_users, after)
         user_names += res[:user_names]
         break unless res[:has_next]
         after = res[:after]
@@ -156,10 +173,10 @@ module InstagramUser
       user_names
     end
 
-    def fetch_user_names(user_id, request_params, after = nil)
+    def fetch_user_names(user_id, request_params, num_users, after)
       variables = {
         id:    user_id,
-        first: @num_users
+        first: num_users
       }
       variables[:after] = after unless after.nil?
       url = format BASE_URL, request_params[:query_hash], JSON.generate(variables)

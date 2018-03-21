@@ -2,7 +2,7 @@
 
 [![Gem Version](https://img.shields.io/gem/v/instagram_user.svg?style=flat)](http://badge.fury.io/rb/instagram_user)
 [![Coverage Status](https://img.shields.io/coveralls/YuzuruS/instagram_user.svg?style=flat)](https://coveralls.io/r/YuzuruS/instagram_user?branch=master)
-[![Code Climate](https://img.shields.io/codeclimate/github/YuzuruS/instagram_user.svg?style=flat)](https://codeclimate.com/github/YuzuruS/instagram_user)
+[![Maintainability](https://api.codeclimate.com/v1/badges/4aca4672a1a60538eef9/maintainability)](https://codeclimate.com/github/YuzuruS/instagram_user/maintainability)
 
 Client for the Instagram Web Service without Instagram API.  
 Implemented in Ruby using the Selenium and Mechanize module.
@@ -42,6 +42,10 @@ res = cli.create_follow('yuzuru_dev')
 # Unfollow the specified user
 res = cli.delete_follow('yuzuru_dev')
 # => true or false
+
+# get media for the specified tag
+res = cli.get_medias_by_tag('japanesefood')
+# => {"recent" => [...], "popularity" => [...]}
 ```
 
 ## Contributing
