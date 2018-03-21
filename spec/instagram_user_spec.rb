@@ -3,8 +3,8 @@ require "instagram_user"
 
 RSpec.describe InstagramUser do
   before do
-    @user_name = 'yuzuru_dev'
-    @password = 'gkK9.izwZGBysV82uowpE+JqYzztgVA9'
+    @user_name = ENV['INSTAGRAM_USER_NAME']
+    @password  = ENV['INSTAGRAM_PASSWORD']
     @cli = InstagramUser.new(
       user_name: @user_name,
       password: @password,
