@@ -30,5 +30,11 @@ RSpec.describe InstagramUser do
     follows = @cli.get_followers(@user_name)
     expect(follows.include?('yudsuzuk')).to eq true
   end
+
+  it "get tags" do
+    tags = @cli.get_medias_by_tag('プログラマー')
+    expect(tags['recent'].count > 0).to eq true
+    expect(tags['popularity'].count > 0).to eq true
+  end
 end
 
