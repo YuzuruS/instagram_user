@@ -28,19 +28,19 @@ Or install it yourself as:
 cli = InstagramUser.new(user_name: 'YOUR_USER_NAME', password: 'YOUR_PASSWORD')
 
 # Get the follow list for the specified user
-follows = cli.get_follows('yuzuru_dev')
-# => ["yudsuzuk", "instagram"]
+follows = cli.get_follows('instagram_user_name')
+# => ["user_name1", "user_name2"...]
 
 # Get the follower list for the specified user
-followers = cli.get_followers('yuzuru_dev')
-# => ["yudsuzuk"]
+followers = cli.get_followers('instagram_user_name')
+# => ["user_name1", "user_name2"...]
 
 # Follow the specified user
-res = cli.create_follow('yuzuru_dev')
+res = cli.create_follow('instagram_user_name')
 # => true or false
 
 # Unfollow the specified user
-res = cli.delete_follow('yuzuru_dev')
+res = cli.delete_follow('instagram_user_name')
 # => true or false
 
 # get media for the specified tag
